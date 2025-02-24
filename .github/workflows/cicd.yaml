@@ -44,3 +44,21 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    needs: [build]  # Ждём завершения job build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: yc-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: 123
+          script: |
+            cd /home/yc-user/test_cicd
+            docker pull ghcr.io/cautics/djulustan1luv:main
+            docker compose down
+            docker compose up -d
