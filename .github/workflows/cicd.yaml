@@ -16,7 +16,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-
+    needs: [testing]
     permissions:
       contents: read
       packages: write
@@ -53,9 +53,9 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.1
         with:
-          host: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SECRET_A }}
           username: yc-user
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SECRET_KEY }}
           passphrase: 123
           script: |
             cd /home/yc-user/test_cicd
